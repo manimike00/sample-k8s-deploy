@@ -1,11 +1,9 @@
-H1 Create Docker
+# Create Docker
 ```
   docker build -t sample-app .
 ``` 
 
-H1 Deploy Helm Chart
+# Deploy Helm Chart
 ```
-
-   helm upgrade sample-app chart -i
-
+  helm upgrade sample-app chart -i
 ```
