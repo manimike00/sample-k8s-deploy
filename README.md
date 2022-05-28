@@ -1,5 +1,5 @@
 ```
 
-	helm upgrade sample-app chart -i
+   helm upgrade sample-app chart -i
 
 ```
