@@ -1,0 +1,19 @@
+sampleApp:
+  meta:
+    namespace: default
+    minReplicas: 1
+    maxReplicas: 1
+  image:
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 80
+    targetport: 80
+  resources:
+    requests:
+      memory: 1
+      cpu: 1
+    limits:
+      memory: 2
+      cpu: 2
+    targetAverageUtilization: 50
