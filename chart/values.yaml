@@ -2,13 +2,14 @@ sampleApp:
   meta:
     namespace: default
     minReplicas: 1
-    maxReplicas: 1
+    maxReplicas: 10
   image:
     tag: latest
   service:
     type: ClusterIP
     port: 80
     targetport: 80
+  replicas: 8
   resources:
     requests:
       memory: 1
