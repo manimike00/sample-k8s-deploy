@@ -15,6 +15,7 @@ phases:
       - helm version
   post_build:
     commands:
+      - export AWS_REGION=ap-south-1
       - export KOPS_STATE_STORE=s3://m8nkops-in-state-store
       - kops export kubecfg --admin --name m8nkops.in
       - helm upgrade sample-app chart --set sampleApp.meta.namespace=$ENV -i -n default
