@@ -1,6 +1,5 @@
 sampleApp:
   meta:
-    namespace: default
     minReplicas: 1
     maxReplicas: 10
   image:

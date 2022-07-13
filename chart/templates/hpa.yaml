@@ -2,7 +2,6 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: sample-app
-  namespace: {{ .Values.sampleApp.meta.namespace }}
 spec:
   minReplicas: {{ .Values.sampleApp.meta.minReplicas }}
   maxReplicas: {{ .Values.sampleApp.meta.maxReplicas }}

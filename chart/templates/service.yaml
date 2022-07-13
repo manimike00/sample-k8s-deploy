@@ -4,7 +4,6 @@ metadata:
   labels:
     app: sample-app
   name: sample-app
-  namespace: {{ .Values.sampleApp.meta.namespace }}
 spec:
   ports:
   - port: {{ .Values.sampleApp.service.port }}
