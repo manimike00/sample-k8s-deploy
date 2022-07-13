@@ -1,10 +1,11 @@
 pipeline {
    agent any
    stages {
-       stage('code') {
+       stage('setup') {
            steps {
                script {
-                   sh 'docker version'
+                   sh 'docker login -u m8ndevops -p $PASSWORD'
+		   sh 'kops '
                }
            }
        }
@@ -12,6 +13,20 @@ pipeline {
            steps {
                script {
 		  sh 'docker build -t m8ndevops/m8ndemo:jenkins .'
+               }
+           }
+       }
+       stage('Push') {
+           steps {
+               script {
+                  sh 'docker push m8ndevops/m8ndemo:jenkins'
+               }
+           }
+       }
+       stage('Deploy') {
+           steps {
+               script {
+                  sh ''
                }
            }
        }
