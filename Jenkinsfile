@@ -26,7 +26,7 @@ pipeline {
        stage('Deploy') {
            steps {
                script {
-                  sh ''
+                  sh 'sed -i s/latest/jenkins/g chart/values.yaml'
                }
            }
        }
