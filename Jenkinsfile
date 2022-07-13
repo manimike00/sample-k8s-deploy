@@ -5,7 +5,6 @@ pipeline {
            steps {
                script {
                    sh 'docker login -u m8ndevops -p $PASSWORD'
-		   sh 'kops '
                }
            }
        }
@@ -28,8 +27,8 @@ pipeline {
                script {
                   sh 'sed -i s/latest/jenkins/g chart/values.yaml'
 		  sh 'az login --service-principal -u $azureArmClientId -p $azureArmClientSecret --tenant $azureArmTenantId'
-      		- az aks get-credentials --resource-group mani-poc --name mani-aks --admin
-      - helm upgrade sample-app chart -i -n aws
+      		  sh 'az aks get-credentials --resource-group mani-poc --name mani-aks --admin'
+      		  sh 'helm upgrade sample-app chart -i -n jenkins'
                }
            }
        }
