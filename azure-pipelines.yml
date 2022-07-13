@@ -7,14 +7,6 @@ trigger:
 resources:
 - repo: self
 
-variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'ae3b04c2-62d3-45ba-a41a-23b90ed156f4'
-  imageRepository: 'm8ndemo'
-  containerRegistry: 'm8ndevops'
-  dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
-
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
@@ -27,11 +19,12 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - script: |
-        which azcopy
-        docker login -u m8ndevops -p $PASSWORD
-        docker build m8ndevps/m8ndemo:azure .
-      displayName: 'Build and Push'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'dockerhub'
+        repository: 'm8ndevops/m8ndemo'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
 
     - task: PublishBuildArtifacts@1
       inputs:
