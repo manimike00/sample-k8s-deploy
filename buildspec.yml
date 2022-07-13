@@ -19,7 +19,7 @@ phases:
     commands:
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:codepipeline
-      - sed -i s/latest/$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)/g chart/values.yaml
+      - sed -i s/latest/codepipeline/g chart/values.yaml
       - cat chart/values.yaml
       - mkdir artifacts
       - mv deployspec.yml artifacts
