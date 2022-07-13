@@ -28,15 +28,11 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+    - script: |
+        which azcopy
+        docker login -u m8ndevops -p $PASSWORD
+        docker build m8ndevps/m8ndemo:azure .
+      displayName: 'Build and Push'
 
     - task: PublishBuildArtifacts@1
       inputs:
