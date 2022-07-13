@@ -19,8 +19,8 @@ spec:
         name: sample-app
         resources:
           requests:
-            memory: {{ .Values.sampleApp.resources.requests.memory }}Gi
+            memory: {{ .Values.sampleApp.resources.requests.memory }}Mi
             cpu: {{ .Values.sampleApp.resources.requests.cpu }}
           limits:
-            memory: {{ .Values.sampleApp.resources.limits.memory }}Gi
+            memory: {{ .Values.sampleApp.resources.limits.memory }}Mi
             cpu: {{ .Values.sampleApp.resources.limits.cpu }}
