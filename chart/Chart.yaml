@@ -2,8 +2,8 @@ apiVersion: v2
 appVersion: 1.0.0
 description: Sample App Service Helm Chart
 maintainers:
-- email: sunitha@gmail.com
-  name: Sunitha AR
+- email: manimike00@gmail.com
+  name: Manikandan S
 name: sample-app
 type: application
 version: 0.1.0
