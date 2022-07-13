@@ -11,7 +11,7 @@ pipeline {
        stage('build') {
            steps {
                script {
-		  sh 'docker build -t m8ndevops/m8ndemo:jenkins'
+		  sh 'docker build -t m8ndevops/m8ndemo:jenkins .'
                }
            }
        }
