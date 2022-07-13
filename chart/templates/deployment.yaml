@@ -16,7 +16,7 @@ spec:
         app: sample-app
     spec:
       containers:
-      - image: nginx:{{ .Values.sampleApp.image.tag }}
+      - image: m8ndevops/nginx:{{ .Values.sampleApp.image.tag }}
         name: sample-app
         resources:
           requests:
