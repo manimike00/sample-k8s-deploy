@@ -4,7 +4,7 @@ pipeline {
        stage('setup') {
            steps {
                script {
-                   sh 'docker login -u m8ndevops -p $PASSWORD'
+                   sh 'docker login -u m8ndevops -p $DOCKER_PASSWORD'
                }
            }
        }
