@@ -13,14 +13,12 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker build -t $REPOSITORY_URI:codepipeline .
 
   post_build:
     commands:
       - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push $REPOSITORY_URI:codepipeline
       - sed -i s/latest/$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)/g chart/values.yaml
       - cat chart/values.yaml
       - mkdir artifacts

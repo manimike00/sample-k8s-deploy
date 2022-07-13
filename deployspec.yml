@@ -3,19 +3,15 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - wget https://github.com/kubernetes/kops/releases/download/v1.21.1/kops-linux-amd64
-      - chmod +x kops-linux-amd64
-      - mv kops-linux-amd64 /usr/local/bin/kops
+      - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
       - wget https://get.helm.sh/helm-v3.7.0-linux-amd64.tar.gz
       - tar -xzf helm-v3.7.0-linux-amd64.tar.gz
       - mv linux-amd64/helm /usr/local/bin
   build:
     commands:
-      - kops version
       - helm version
   post_build:
     commands:
-      - export AWS_REGION=ap-south-1
-      - export KOPS_STATE_STORE=s3://m8nkops-in-state-store
-      - kops export kubecfg --admin --name m8nkops.k8s.local
-      - helm upgrade sample-app chart --set sampleApp.meta.namespace=$ENV -i -n default
+      - az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+      - az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+      - helm upgrade sample-app chart -i -n default
