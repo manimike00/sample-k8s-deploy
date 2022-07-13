@@ -60,5 +60,5 @@ stages:
               #echo "Switch Dorectory"
               cd /home/vsts/work/1/
               az aks get-credentials --resource-group mani-poc --name mani-aks --admin
-              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) 
+              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) -n azure
             displayName: 'Deploy in AKS'

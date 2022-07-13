@@ -14,4 +14,4 @@ phases:
     commands:
       - az login --service-principal -u $azureArmClientId -p $azureArmClientSecret --tenant $azureArmTenantId
       - az aks get-credentials --resource-group mani-poc --name mani-aks --admin
-      - helm upgrade sample-app chart -i -n default
+      - helm upgrade sample-app chart -i -n aws
