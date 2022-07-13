@@ -33,6 +33,8 @@ stages:
         repository: 'm8ndevops/m8ndemo'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
+        tags: |
+           $(tag)
 
     - task: PublishBuildArtifacts@1
       inputs:
@@ -40,25 +42,23 @@ stages:
         artifactName: 'chart'
         publishLocation: 'Container'
 
-        #- stage: Deploy
-        #  jobs:
-        #  - deployment: KubernetesDeploy
-        #    displayName: Deploy App
-        #    pool:
-        #      vmImage: 'ubuntu-20.04'
-        #    environment: 'm8nkops'
-        #    strategy:
-        #      runOnce:
-        #        deploy:
-        #          steps:
-        #          - download: current
-        #            artifact: chart
-        #          - script: |
-        #              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
-        #              #echo "Switch Dorectory"
-        #              cd /home/vsts/work/1/
-        #              az aks get-credentials --resource-group KARTAPULT_PRODUCTION_RG --name KARTAPULT-PROD-AKS --admin
-        #              helm upgrade api-marketing-automation chart -i --set apiMarketingAutomation.image.tag=$(tag) 
-        #              #upload content to container versioned folder
-        #              ## target new version
-        #            displayName: 'Deploy in AKS'
+- stage: Deploy
+  jobs:
+  - deployment: KubernetesDeploy
+    displayName: Deploy App
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: 'm8nkops'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: chart
+          - script: |
+              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+              #echo "Switch Dorectory"
+              cd /home/vsts/work/1/
+              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) 
+            displayName: 'Deploy in AKS'
