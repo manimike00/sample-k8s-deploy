@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Install Stage"
+
+  pre_build:
+    commands:
+      - docker login -u m8ndevops -p $PASSWORD
+      - REPOSITORY_URI=m8ndevops/m8ndemo
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - sed -i s/latest/$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)/g chart/values.yaml
+      - cat chart/values.yaml
+      - mkdir artifacts
+      - mv deployspec.yml artifacts
+      - mv chart artifacts
+
+artifacts:
+    files: 
+      #- deployspec.yml
+      - '**/*'
+    base-directory: artifacts
