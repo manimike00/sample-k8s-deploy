@@ -27,38 +27,46 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'dockerhub'
-        repository: 'm8ndevops/m8ndemo'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-           $(tag)
+#    - task: Docker@2
+#      inputs:
+#        containerRegistry: 'dockerhub'
+#        repository: 'm8ndevops/m8ndemo'
+#        command: 'buildAndPush'
+#        Dockerfile: '**/Dockerfile'
+#        tags: |
+#           $(tag)
 
-    - task: PublishBuildArtifacts@1
+#    - task: PublishBuildArtifacts@1
+#      inputs:
+#        pathtoPublish: 'chart'
+#        artifactName: 'chart'
+#        publishLocation: 'Container'
+        
+    - task: AzureVmssDeployment@0
       inputs:
-        pathtoPublish: 'chart'
-        artifactName: 'chart'
-        publishLocation: 'Container'
+        azureSubscription: 'RAPYDER-POC-SUBSCRIPTION(cf22be19-a8a1-4e16-94a6-e77eb06f8d3e)'
+        action: 'Update image'
+        vmssName: 'mani-vms'
+        vmssOsType: 'Linux'
+        imageUrl: 'https://md-mwdmpjgmjv3k.z26.blob.storage.azure.net/533j3mt3slgt/abcd?sv=2018-03-28&sr=b&si=8e22e700-0411-443d-baf8-4db1cc6282ae&sig=LIwPMJCdZM33DZGU7%2BUJKaxVKFGH7lokDTCi5KgJPbw%3D'    
 
-- stage: Deploy
-  jobs:
-  - deployment: KubernetesDeploy
-    displayName: Deploy App
-    pool:
-      vmImage: 'ubuntu-20.04'
-    environment: 'm8nkops'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: chart
-          - script: |
-              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
-              #echo "Switch Dorectory"
-              cd /home/vsts/work/1/
-              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
-              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) -n azure
-            displayName: 'Deploy in AKS'
+#- stage: Deploy
+#  jobs:
+#  - deployment: KubernetesDeploy
+#    displayName: Deploy App
+#    pool:
+#      vmImage: 'ubuntu-20.04'
+#    environment: 'm8nkops'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - download: current
+#            artifact: chart
+#          - script: |
+#              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+#              #echo "Switch Dorectory"
+#              cd /home/vsts/work/1/
+#              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+#              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) -n azure
+#            displayName: 'Deploy in AKS'
