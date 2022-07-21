@@ -2,7 +2,7 @@ variable "managed_image_name" {}
 variable "client_id" {}
 variable "client_secret" {}
 variable "location" {
-#  location = "centralindia"
+  location = "centralindia"
 }
 variable "resource_group" {
   default = "mani-poc"
