@@ -24,6 +24,20 @@ stages:
         pathtoPublish: 'terraform'
         artifactName: 'terraform'
         publishLocation: 'Container'
+    - task: PackerBuild@1
+      inputs:
+        templateType: 'builtin'
+        ConnectedServiceName: 'RAPYDER-POC-SUBSCRIPTION(cf22be19-a8a1-4e16-94a6-e77eb06f8d3e)'
+        isManagedImage: true
+        managedImageName: 'myPackerImage-5'
+        location: 'centralindia'
+        storageAccountName: 'manivmss'
+        azureResourceGroup: 'mani-poc'
+        baseImageSource: 'default'
+        baseImage: 'Canonical:UbuntuServer:16.04-LTS:linux'
+        packagePath: 'packer'
+        deployScriptPath: 'build.pkr.hcl'
+        deployScriptArguments: '-var "weekday=Sunday"'
 
 #- stage: Deploy
 #  jobs:
