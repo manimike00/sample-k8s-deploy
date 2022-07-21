@@ -27,7 +27,7 @@ stages:
 
     - script: |
         cd packer
-        packer build -var client_id=$(client_id) -var client_secret=$(client_secret) -var subscription_id=$(subscription_id) -var tenant_id=$(tenant_id) -var vm_size=Standard_B1ls .
+        packer build -var managed_image_name=manipoc-$(tag) -var client_id=$(client_id) -var client_secret=$(client_secret) -var subscription_id=$(subscription_id) -var tenant_id=$(tenant_id) -var vm_size=Standard_B1ls .
       displayName: Build Packer Image
       
 

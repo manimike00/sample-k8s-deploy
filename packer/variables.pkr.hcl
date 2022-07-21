@@ -1,4 +1,4 @@
-#variable "managed_image_name" {}
+variable "managed_image_name" {}
 variable "client_id" {}
 variable "client_secret" {}
 #variable "location" {
