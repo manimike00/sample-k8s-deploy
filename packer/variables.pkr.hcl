@@ -8,7 +8,7 @@ variable "client_secret" {}
 #  default = "mani-poc"
 #}
 variable "subscription_id" {}
-#variable "tenant_id" {}
+variable "tenant_id" {}
 variable "vm_size" {
   default = "Standard_B1ls"
 }
