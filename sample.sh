@@ -1,3 +1,4 @@
 #!/bin/bash
 
-mv chart /tmp
+ls -ltr
+pwd
