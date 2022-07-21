@@ -1,0 +1,47 @@
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: 'terraform'
+        artifactName: 'terraform'
+        publishLocation: 'Container'
+
+#- stage: Deploy
+#  jobs:
+#  - deployment: KubernetesDeploy
+#    displayName: Deploy App
+#    pool:
+#      vmImage: 'ubuntu-20.04'
+#    environment: 'm8nkops'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - download: current
+#            artifact: chart
+#          - script: |
+#              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+#              #echo "Switch Dorectory"
+#              cd /home/vsts/work/1/
+#              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+#              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) -n azure
+#            displayName: 'Deploy in AKS'
