@@ -4,9 +4,9 @@ variable "client_secret" {}
 #variable "location" {
 #  location = "centralindia"
 #}
-variable "resource_group" {
-  default = "mani-poc"
-}
+#variable "resource_group" {
+#  default = "mani-poc"
+#}
 variable "subscription_id" {}
 variable "tenant_id" {}
 variable "vm_size" {
