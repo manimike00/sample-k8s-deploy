@@ -30,7 +30,7 @@ stages:
         azureSubscription: 'RAPYDER-POC-SUBSCRIPTION(cf22be19-a8a1-4e16-94a6-e77eb06f8d3e)'
         templatePath: 'packer'
         command: 'build'
-        variables: 'managed_image_name=myPackerImage-6 resource_group=mani-poc client_id=82b29915-3f0d-46d7-9f21-c62c0451fa79 client_secret=${client_secret} location=centralindia subscription_id=cf22be19-a8a1-4e16-94a6-e77eb06f8d3e tenant_id=ee873d89-a26e-47cf-8019-b65d6ee4d46c vm_size=Standard_B1ls'
+        variables: 'managed_image_name=myPackerImage-6 resource_group=mani-poc location=centralindia subscription_id=cf22be19-a8a1-4e16-94a6-e77eb06f8d3e vm_size=Standard_B1ls'
 
 #- stage: Deploy
 #  jobs:
