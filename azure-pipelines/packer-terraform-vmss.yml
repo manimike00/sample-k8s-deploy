@@ -26,21 +26,21 @@ stages:
         vmssName: 'mani-vmss'
         vmssOsType: 'Linux'
         imageUrl: 'https://manivmss.blob.core.windows.net/system/Microsoft.Compute/Images/packer/ubuntu1604-osDisk.a6a993dc-485d-43a2-a7d0-a6f63b00b8cc.vhd'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: 'terraform'
-        artifactName: 'terraform'
-        publishLocation: 'Container'
+#    - task: PublishBuildArtifacts@1
+#      inputs:
+#        pathtoPublish: 'terraform'
+#        artifactName: 'terraform'
+#        publishLocation: 'Container'
 
-    - script: |
-        cd packer
-        packer build -var managed_image_name=manipoc-$(tag) \
-          -var client_id=$(client_id) \
-          -var client_secret=$(client_secret) \
-          -var subscription_id=$(subscription_id) \
-          -var tenant_id=$(tenant_id) \
-          -var vm_size=Standard_B1ls .
-      displayName: Build Packer Image
+#    - script: |
+#        cd packer
+#        packer build -var managed_image_name=manipoc-$(tag) \
+#          -var client_id=$(client_id) \
+#          -var client_secret=$(client_secret) \
+#          -var subscription_id=$(subscription_id) \
+#          -var tenant_id=$(tenant_id) \
+#          -var vm_size=Standard_B1ls .
+#      displayName: Build Packer Image
       
 
 #- stage: Deploy
