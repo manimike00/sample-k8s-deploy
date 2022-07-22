@@ -1,7 +1,6 @@
 terraform {
 
   required_version = ">=0.12"
-
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -104,7 +103,7 @@ resource "azurerm_virtual_machine_scale_set" "vmss" {
   upgrade_policy_mode = "Manual"
 
   sku {
-    name     = "Standard_DS1_v2"
+    name     = "Standard_B1ls"
     tier     = "Standard"
     capacity = 2
   }
@@ -186,7 +185,7 @@ resource "azurerm_virtual_machine" "jumpbox" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.vmss.name
   network_interface_ids = [azurerm_network_interface.jumpbox.id]
-  vm_size               = "Standard_DS1_v2"
+  vm_size               = "Standard_B1ls"
 
   storage_image_reference {
     publisher = "Canonical"
