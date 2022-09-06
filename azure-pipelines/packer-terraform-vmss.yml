@@ -49,6 +49,7 @@ stages:
         cd /home/vsts/work/1/
         az aks get-credentials --resource-group mani-poc --name mani-aks --admin
         ls -la
+        ls /home/vsts/work/1/s/chart -la
         #helm upgrade app chart --set sampleApp.image.tag=$(tag) -i
       displayName: 'Deploy in AKS'
 
