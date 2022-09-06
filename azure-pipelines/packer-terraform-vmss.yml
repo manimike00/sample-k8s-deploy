@@ -1,3 +1,7 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
 trigger:
 - main
 
@@ -5,6 +9,11 @@ resources:
 - repo: self
 
 variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'ae3b04c2-62d3-45ba-a41a-23b90ed156f4'
+  imageRepository: 'nginx'
+  containerRegistry: 'maniaksreg.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
@@ -19,48 +28,43 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-#    - task: AzureVmssDeployment@0
-#      inputs:
-#        azureSubscription: 'RAPYDER-POC-SUBSCRIPTION(cf22be19-a8a1-4e16-94a6-e77eb06f8d3e)'
-#        action: 'Update image'
-#        vmssName: 'mani-vmss'
-#        vmssOsType: 'Linux'
-#        imageUrl: 'https://manivmss.blob.core.windows.net/system/Microsoft.Compute/Images/packer/ubuntu1604-osDisk.a6a993dc-485d-43a2-a7d0-a6f63b00b8cc.vhd'
-#    - task: PublishBuildArtifacts@1
-#      inputs:
-#        pathtoPublish: 'terraform'
-#        artifactName: 'terraform'
-#        publishLocation: 'Container'
-
     - script: |
-        cd packer
-        echo "hello world"
-#        packer build -var managed_image_name=manipoc-$(tag) \
-#          -var client_id=$(client_id) \
-#          -var client_secret=$(client_secret) \
-#          -var subscription_id=$(subscription_id) \
-#          -var tenant_id=$(tenant_id) \
-#          -var vm_size=Standard_B1ls .
-#      displayName: Build Packer Image
-      
+        az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+        echo "Download Config Files"
 
-#- stage: Deploy
-#  jobs:
-#  - deployment: KubernetesDeploy
-#    displayName: Deploy App
-#    pool:
-#      vmImage: 'ubuntu-20.04'
-#    environment: 'm8nkops'
-#    strategy:
-#      runOnce:
-#        deploy:
-#          steps:
-#          - download: current
-#            artifact: chart
-#          - script: |
-#              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
-#              #echo "Switch Dorectory"
-#              cd /home/vsts/work/1/
-#              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
-#              helm upgrade sample-app chart -i --set sampleApp.image.tag=$(tag) -n azure
-#            displayName: 'Deploy in AKS'
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: 'chart'
+        artifactName: 'chart'
+        publishLocation: 'Container'
+
+- stage: Deploy
+  jobs:
+  - deployment: KubernetesDeploy
+    displayName: Deploy App
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: 'maniaks'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: chart
+          - script: |
+              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+              #echo "Switch Dorectory"
+              cd /home/vsts/work/1/
+              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+              helm upgrade app chart -i --set sampleApp.image.tag=$(tag)
+            displayName: 'Deploy in AKS'
