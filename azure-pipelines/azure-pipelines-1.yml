@@ -1,0 +1,70 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'ae3b04c2-62d3-45ba-a41a-23b90ed156f4'
+  imageRepository: 'nginx'
+  containerRegistry: 'maniaksreg.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - script: |
+        az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+        echo "Download Config Files"
+
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: 'chart'
+        artifactName: 'chart'
+        publishLocation: 'Container'
+
+- stage: Deploy
+  jobs:
+  - deployment: KubernetesDeploy
+    displayName: Deploy App
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: 'maniaks'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: chart
+          - script: |
+              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+              #echo "Switch Dorectory"
+              cd /home/vsts/work/1/
+              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+              helm upgrade app chart -i --set sampleApp.image.tag=$(tag)
+            displayName: 'Deploy in AKS'
