@@ -21,7 +21,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build and Deploy stage
   jobs:
   - job: Build
     displayName: Build
@@ -47,23 +47,31 @@ stages:
         artifactName: 'chart'
         publishLocation: 'Container'
 
-- stage: Deploy
-  jobs:
-  - deployment: KubernetesDeploy
-    displayName: Deploy App
-    pool:
-      vmImage: 'ubuntu-20.04'
-    environment: 'maniaks'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: chart
-          - script: |
-              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
-              #echo "Switch Dorectory"
-              cd /home/vsts/work/1/
-              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
-              helm upgrade app chart -i --set sampleApp.image.tag=$(tag)
-            displayName: 'Deploy in AKS'
+    - script: |
+        az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+        #echo "Switch Dorectory"
+        cd /home/vsts/work/1/
+        az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+        helm upgrade app chart -i --set sampleApp.image.tag=$(tag)
+      displayName: 'Deploy in AKS'
+
+      #- stage: Deploy
+      #  jobs:
+      #  - deployment: KubernetesDeploy
+      #    displayName: Deploy App
+      #    pool:
+      #      vmImage: 'ubuntu-20.04'
+      #    environment: 'maniaks'
+      #    strategy:
+      #      runOnce:
+      #        deploy:
+      #          steps:
+      #          - download: current
+      #            artifact: chart
+      #          - script: |
+      #              az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
+      #              #echo "Switch Dorectory"
+      #              cd /home/vsts/work/1/
+      #              az aks get-credentials --resource-group mani-poc --name mani-aks --admin
+      #              helm upgrade app chart -i --set sampleApp.image.tag=$(tag)
+      #            displayName: 'Deploy in AKS'
