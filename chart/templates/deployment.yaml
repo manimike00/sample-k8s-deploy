@@ -20,7 +20,7 @@ spec:
         resources:
           requests:
             memory: {{ .Values.sampleApp.resources.requests.memory }}Mi
-            cpu: {{ .Values.sampleApp.resources.requests.cpu }}
+            cpu: {{ .Values.sampleApp.resources.requests.cpu }}m
           limits:
             memory: {{ .Values.sampleApp.resources.limits.memory }}Mi
-            cpu: {{ .Values.sampleApp.resources.limits.cpu }}
+            cpu: {{ .Values.sampleApp.resources.limits.cpu }}m
