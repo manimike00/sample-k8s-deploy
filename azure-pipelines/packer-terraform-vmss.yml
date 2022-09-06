@@ -37,11 +37,11 @@ stages:
         tags: |
           $(tag)
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathtoPublish: 'chart'
-        artifactName: 'chart'
-        publishLocation: 'Container'
+          #    - task: PublishBuildArtifacts@1
+          #      inputs:
+          #        pathtoPublish: 'chart'
+          #        artifactName: 'chart'
+          #        publishLocation: 'Container'
 
     - script: |
         az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
