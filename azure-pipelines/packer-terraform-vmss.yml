@@ -34,8 +34,6 @@ stages:
         repository: 'nginx'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
-        tags: |
-          latest
 
           #    - task: PublishBuildArtifacts@1
           #      inputs:
