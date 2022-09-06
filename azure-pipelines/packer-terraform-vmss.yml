@@ -28,10 +28,6 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    - script: |
-        az login --service-principal -u $(azureArmClientId) -p $(azureArmClientSecret) --tenant $(azureArmTenantId)
-        echo "Download Config Files"
-
     - task: Docker@2
       inputs:
         containerRegistry: 'maniaks'
